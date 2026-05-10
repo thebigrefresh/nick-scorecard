@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,11 @@
       height: 100%;
     }
 
-    body { display: block; padding: 0; margin: 0; }
+    body {
+      display: block;
+      padding: 0;
+      margin: 0;
+    }
 
     .cards-wrapper {
       display: flex;
@@ -48,7 +53,7 @@
     .card-score-row {
       display: flex;
       align-items: baseline;
-      gap: 2px;
+      gap: 4px;
     }
 
     .card-score {
@@ -72,17 +77,17 @@
       border-radius: 50%;
     }
 
-    .card--inner  { background: #edf0f7; }
-    .card--inner  .card-score { color: #2d5be3; }
-    .card--inner  .card-dot   { background: #2d5be3; }
+    .card--inner   { background: #edf0f7; }
+    .card--inner   .card-score { color: #2d5be3; }
+    .card--inner   .card-dot   { background: #2d5be3; }
 
-    .card--shared { background: #f7f5ee; }
-    .card--shared .card-score { color: #c47c00; }
-    .card--shared .card-dot   { background: #c47c00; }
+    .card--shared  { background: #f7f5ee; }
+    .card--shared  .card-score { color: #c47c00; }
+    .card--shared  .card-dot   { background: #c47c00; }
 
-    .card--owned  { background: #f0f7f0; }
-    .card--owned  .card-score { color: #2a7a3b; }
-    .card--owned  .card-dot   { background: #2a7a3b; }
+    .card--owned   { background: #f0f7f0; }
+    .card--owned   .card-score { color: #2a7a3b; }
+    .card--owned   .card-dot   { background: #2a7a3b; }
 
     .state-msg {
       text-align: center;
@@ -157,6 +162,7 @@
 
   async function loadScores() {
     const container = document.getElementById("cards");
+
     try {
       const res = await fetch("/api/scores");
       const data = await res.json();
@@ -171,6 +177,7 @@
         renderCards(data);
         lastSnapshot = current;
       }
+
     } catch (err) {
       if (!lastSnapshot) {
         container.innerHTML = `<p class="state-msg">Could not load scores. ${err.message}</p>`;
