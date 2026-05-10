@@ -17,6 +17,7 @@
     #wrap {
       width: 100%;
       padding: 10px 4px 8px;
+      min-height: 100vh;
     }
 
     .chart-container {
@@ -97,6 +98,8 @@
       border-radius: 50%;
       flex-shrink: 0;
     }
+
+    .tt-max { color: #9b9b9b; font-size: 11px; }
   </style>
 </head>
 <body>
@@ -114,7 +117,7 @@ const DOMAINS = ["inner", "shared", "owned"];
 const LABELS  = { inner: "Inner", shared: "Shared", owned: "Owned" };
 const POLL    = 30000;
 
-const PAD = { top: 10, right: 16, bottom: 30, left: 38 };
+const PAD = { top: 10, right: 16, bottom: 30, left: 34 };
 const Y_MIN = 0, Y_MAX = 100;
 
 let lastSnap = null;
@@ -144,7 +147,7 @@ function renderChart(entries) {
       </div>
     </div>
     <div style="position:relative">
-      <svg id="chart" style="width:100%;display:block" height="200"></svg>
+      <svg id="chart" style="width:100%;display:block" height="320"></svg>
     </div>
   `;
 
@@ -156,7 +159,7 @@ function drawChart(entries) {
   if (!svg) return;
 
   const W = svg.getBoundingClientRect().width || 600;
-  const H = 200;
+  const H = 320;
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top  - PAD.bottom;
   const n = entries.length;
@@ -167,8 +170,7 @@ function drawChart(entries) {
   const xPos = i => PAD.left + (n === 1 ? chartW / 2 : i * chartW / (n - 1));
   const yPos = v => PAD.top + chartH - (v - Y_MIN) / (Y_MAX - Y_MIN) * chartH;
 
-  // Grid lines at 0, 20, 40, 60, 80, 100%
-  for (let v = Y_MIN; v <= Y_MAX; v += 20) {
+  for (let v = Y_MIN; v <= Y_MAX; v += 10) {
     const y = yPos(v);
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", PAD.left); line.setAttribute("x2", PAD.left + chartW);
@@ -188,7 +190,6 @@ function drawChart(entries) {
     svg.appendChild(txt);
   }
 
-  // X-axis labels
   entries.forEach((e, i) => {
     const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
     txt.setAttribute("x", xPos(i));
@@ -201,7 +202,6 @@ function drawChart(entries) {
     svg.appendChild(txt);
   });
 
-  // Lines + dots (converted to %)
   DOMAINS.forEach(key => {
     const color = COLOURS[key];
     const toPct = v => v != null ? Math.round((v / MAXES[key]) * 100) : null;
@@ -226,7 +226,6 @@ function drawChart(entries) {
     });
   });
 
-  // Hover hit areas
   const tooltip = document.getElementById("tooltip");
   const xStep = n > 1 ? chartW / (n - 1) : chartW;
 
