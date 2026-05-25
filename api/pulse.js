@@ -16,7 +16,7 @@ const SCORE_FIELDS = [
   "Best Self", "Fear Patterns", "North Star", "Internal Success Metrics",
   "Presence", "Energy", "Early Signals", "Inner-Shared Alignment",
   "Trust", "Delegation", "Courageous Conversations", "Team Development",
-  "Shared Purpose", "Shared-Owned Alignment", "Time Clarity", "Stakeholders",
+  "Shared Purpose", "Shared-Owned Authority", "Time Clarity", "Stakeholders",
   "Leadership Rhythm", "Personal Practices", "Blueprint & Rules",
   "System Integration", "System Health",
 ];
@@ -27,6 +27,12 @@ const TEXT_FIELDS = {
   focusArea:       "Focus Area",
   suddenShifts:    "Sudden Shifts",
   reflectiveNotes: "Reflective Notes",
+};
+
+// Accept alternate keys for any column that has been relabelled, and write it
+// to the real column name on the left. Lets the GPT send an older label safely.
+const ALIASES = {
+  "Shared-Owned Authority": ["Shared-Owned Alignment"],
 };
 
 export default async function handler(req, res) {
@@ -92,7 +98,15 @@ export default async function handler(req, res) {
 
   // The 21 numeric scores
   for (const name of SCORE_FIELDS) {
-    const val = scoreObj[name];
+    let val = scoreObj[name];
+    if ((val === undefined || val === null || val === "") && ALIASES[name]) {
+      for (const alt of ALIASES[name]) {
+        if (scoreObj[alt] !== undefined && scoreObj[alt] !== null && scoreObj[alt] !== "") {
+          val = scoreObj[alt];
+          break;
+        }
+      }
+    }
     if (val !== undefined && val !== null && val !== "") {
       const num = Number(val);
       if (!Number.isNaN(num)) {
