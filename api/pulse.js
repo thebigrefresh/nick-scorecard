@@ -8,7 +8,7 @@
 // only your own GPT can call this endpoint, not a random passer-by.
 
 const NOTION_SECRET = process.env.NOTION_SECRET;
-const DATABASE_ID   = process.env.NOTION_PULSE_DATABASE_ID;
+const DATABASE_ID   = process.env.NOTION_PULSE_DATABASE_ID || process.env.NOTION_DATABASE_ID;
 const WRITE_TOKEN   = process.env.PULSE_WRITE_TOKEN;
 
 // The 21 score properties, named exactly as the Notion columns.
